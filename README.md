@@ -1,6 +1,9 @@
 Minecraft server management script and systemd unit file
 ========================================================
 
+Copyright (c) 2013–2014 Scott Zeid.  Released under the X11 License.  
+<http://code.s.zeid.me/minecraft-server-manager>
+
 This is a shell script that can be used to start, stop, and control a
 Minecraft server (including mods like Bukkit and Sponge), and a systemd
 unit file to go along with it.  Neither the unit file nor systemd itself
