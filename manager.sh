@@ -95,7 +95,7 @@ function tmux() {
 }
 
 function tmux-option() {
- if [ "$1" = "--debug" -o "$CB_DEBUG" = "1" ]; then
+ if [ "$1" = "--debug" -o "$MINECRAFT_SERVER_MANAGER_DEBUG" = "1" ]; then
   shift
   tmux set-option -t "$SESSION_NAME" "$@"
  else
