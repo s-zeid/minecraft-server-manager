@@ -1,0 +1,105 @@
+#!/bin/bash
+
+# Default options for Minecraft server management script
+
+# DO NOT EDIT, RENAME, MOVE, OR DELETE THIS FILE!  THIS FILE CONTAINS
+# *DEFAULT* OPTIONS. THESE DEFAULTS MAY BE CHANGED WITH UPDATES TO THE
+# MAIN SCRIPT.
+# 
+# If you want to make changes, override the variables in question in
+# minecraft-server.conf instead.
+# 
+# The variable names should be self-explanatory (except for the "Advanced
+# tmux options" section).
+# 
+# NOTE: This defaults file uses a special syntax to set variables:
+# 
+#     _ ${VARIABLE_NAME:=default-value}
+# 
+# This syntax will only set the variable if it hasn't already been set
+# (e.g. in minecraft-server.conf).  The _ is simply an alias for the : command,
+# which does nothing, because Vim < 7.4's syntax highlighting treats : as the
+# beginning of a comment (it's not).
+
+function _() { :; } # Vim < 7.4 syntax highlighting treats : as a comment line
+
+# General options #
+
+_ ${FRIENDLY_NAME:=The Minecraft server}
+_ ${BASE_PATH:=$(dirname "$0")/..}
+_ ${JAR_PATH:=$BASE_PATH/minecraft-server.jar}
+_ ${PID_FILE:=$BASE_PATH/server.pid}
+_ ${WORLD_PATH:=$BASE_PATH/worlds}
+_ ${PLUGIN_PATH:=$BASE_PATH/plugins}
+_ ${BACKUP_PATH:=$BASE_PATH/backups}
+
+# Java options #
+_ ${MIN_MEMORY:=16M}
+_ ${MAX_MEMORY:=1024M}
+
+# You can specify extra arguments to pass to the JVM in the following manner:
+# 
+#     java_opt "/path/to/some/script arg1 'arg2 with spaces' \"arg3 derp\""
+#     java_opt "/path/to/other/script"
+# 
+# This adds 2 new elements with the new commands to the list of JVM options.
+# 
+# Note that `-XX:+...`-style options can be disabled simply by using `-XX:-`
+# instead.
+# 
+# (Note:  do not use `default_java_opt`; that's for the default options.)
+
+default_java_opt -XX:+UseConcMarkSweepGC
+default_java_opt -XX:+CMSIncrementalPacing
+default_java_opt -XX:ParallelGCThreads=1
+default_java_opt -XX:+AggressiveOpts
+
+# tmux options #
+
+# These options control the appearance of the tmux instance in which the
+# Minecraft server console runs.  You may apply changes to this section
+# without needing to restarting the entire server by running
+# `minecraft-server.sh setup-tmux`.
+
+_ ${STATUS_LEFT:='Minecraft server'}
+_ ${STATUS_RIGHT:='To detach, press ^C'}
+_ ${STATUS_POSITION:=top}
+_ ${STATUS_BG:=white}
+_ ${STATUS_FG:=black}
+
+# Advanced tmux options #
+
+# If you don't know what this is, or if you are having problems with other
+# tmux instances, you shouldn't have to worry about this.  If a GNU screen
+# session is locking up when running a Minecraft server using this script,
+# try changing $SOCKET_NAME.  (The default, which is equal to $TMUX_NAME,
+# is chosen to avoid that behavior.)
+
+# To run multiple Minecraft servers at once, use different socket or
+# session names for each one.  Simply changing the window name is not
+# enough; the script assumes the console is always on window 0.  Also
+# remember to change the values of $PID_FILE, $WORLD_PATH, and
+# $BACKUP_PATH above if you are running multiple Minecraft server
+# instances.
+
+_ ${TMUX_NAME:=minecraft-server}
+_ ${SOCKET_NAME:=$TMUX_NAME}
+_ ${SESSION_NAME:=$TMUX_NAME}
+_ ${WINDOW_NAME:=$TMUX_NAME}
+
+# You can specify extra commands to run in the following manner:
+# 
+#     extra_window "/path/to/some/script arg1 'arg2 with spaces' \"arg3 derp\""
+#     extra_window "/path/to/other/script"
+# 
+# This adds 2 new elements with the new commands to the list of windows.
+# The entire command must be given as a single string, and arguments
+# containing spaces must themselves have the spaces quoted or escaped,
+# which may require double escaping in this context.
+# 
+# The working directory of the command will be set to the value of $BASE_PATH.
+# 
+# The default tmux window is still set to the Minecraft server console.
+# 
+# (Note:  do not use `default_extra_windows`; that's for the default extra
+# windows, of which there are none.)

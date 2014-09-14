@@ -1,0 +1,7 @@
+# vim: set ft=sh:
+
+BASE_PATH=/path/to/minecraft-server
+
+MAX_MEMORY=2048M
+
+JAR_PATH=$BASE_PATH/spigot.jar

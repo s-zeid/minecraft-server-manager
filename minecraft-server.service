@@ -1,0 +1,13 @@
+[Unit]
+Description=Minecraft server
+#Description=Minecraft server implementing the Bukkit API
+#Description=Minecraft server implementing the Sponge API
+
+[Service]
+ExecStart=/path/to/minecraft-server/manager/manager.sh start
+ExecStop=/path/to/minecraft-server/manager/manager.sh stop
+PIDFile=/path/to/minecraft-server/server.pid
+Type=forking
+
+[Install]
+WantedBy=default.target
