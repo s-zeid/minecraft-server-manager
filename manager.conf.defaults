@@ -60,8 +60,11 @@ default_java_opt -XX:+AggressiveOpts
 # Minecraft server console runs.  You may apply changes to this section
 # without needing to restarting the entire server by running
 # `minecraft-server.sh setup-tmux`.
+# 
+# For $STATUS_LEFT, "The " and "the " will be removed from the beginning,
+# and " server" will be removed from the end.
 
-_ ${STATUS_LEFT:='Minecraft server'}
+_ ${STATUS_LEFT:=$FRIENDLY_NAME}
 _ ${STATUS_RIGHT:='To detach, press ^C'}
 _ ${STATUS_POSITION:=top}
 _ ${STATUS_BG:=white}

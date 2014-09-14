@@ -83,6 +83,11 @@ for (( i = 0; i < ${#EXTRA_WINDOWS_USER[@]}; i++ )); do
  default_extra_window "${EXTRA_WINDOWS_USER[i]}"
 done
 
+# Remove "The" and "server" from STATUS_LEFT
+STATUS_LEFT=${STATUS_LEFT#The }
+STATUS_LEFT=${STATUS_LEFT#the }
+STATUS_LEFT=${STATUS_LEFT% server}
+
 # Helper functions ###################################################{{{1
 
 function tmux() {
