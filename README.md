@@ -28,10 +28,15 @@ Requirements
 Installation
 ------------
 
-    fedora$ sudo yum install bash tmux
-    ubuntu$ sudo apt-get install bash tmux
+    fedora$ sudo yum install bash tmux git
+    ubuntu$ sudo apt-get install bash tmux git
     $ cd /path/to/minecraft-server
     $ git clone https://bitbucket.org/scottywz/minecraft-server-manager.git manager
+
+To update the manager:
+
+    $ cd /path/to/minecraft-server/manager
+    $ git pull
 
 Configuration
 -------------
