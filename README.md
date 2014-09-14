@@ -49,8 +49,16 @@ for the "Advanced tmux options" section.  However, the defaults file does
 contain some informational comments, which should be considered a
 supplement to this README and are worth reading.
 
-The one default particularly worth noting is `$BASE_PATH`, which defaults
-to the parent directory of the directory in which the script is contained.
+The few defaults particularly worth noting are:
+
+* `$BASE_PATH`, which defaults to the parent directory of the directory
+  in which the script is contained.
+* `$TMUX_NAME`, which defaults to `minecraft-server` and needs to be
+  changed if you will be running multiple servers.
+* `$JAR_PATH`, which defaults to `$BASE_PATH/minecraft-server.jar`.
+* `$MAX_MEMORY`, which defaults to `1024M`.
+* `$FRIENDLY_NAME`, which defaults to `The Minecraft server` and is
+  displayed in tmux and in some error messages.
 
 To override a variable, create or edit `manager.conf` and set the
 variable as you would in a bash script.  The conf file is sourced as a
