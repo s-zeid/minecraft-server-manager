@@ -28,6 +28,9 @@
 # shall not be used in advertising or otherwise to promote the sale, use or
 # other dealings in this Software without prior written authorization.
 
+SCRIPT=$0
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+
 # Configuration file parsing #########################################{{{1
 
 # Select user configuration file, using the -c/--config command-line
@@ -41,7 +44,7 @@ elif [ "$1" = "-c" -o "$1" = "--config" ]; then
  shift 2
 fi
 if [ -z "$USER_CONFIG_FILE" ]; then
- USER_CONFIG_FILE="$(dirname "$0")"/manager.conf
+ USER_CONFIG_FILE="$SCRIPT_DIR"/manager.conf
 fi
 
 # For each array-type configuration option, declare two arrays:
@@ -50,6 +53,7 @@ fi
 # will then be re-used as the final value.
 declare -a JAVA_OPTS JAVA_OPTS_USER
 declare -a EXTRA_WINDOWS EXTRA_WINDOWS_USER
+declare -a PATH_VARS PATH_VARS_USER
 
 # Convenience functions to add values to the arrays.  These are
 # used in the config files.
@@ -70,7 +74,7 @@ function extra_window() {
 [ -e "$USER_CONFIG_FILE" ] && . "$USER_CONFIG_FILE"
 
 # Load default settings
-. "$(dirname "$0")"/manager.conf.defaults
+. "$SCRIPT_DIR"/manager.conf.defaults
 
 # Append user Java options to $JAVA_OPTS
 # so that the defaults come first
@@ -126,6 +130,8 @@ function echo_warning() {
 }
 
 # Commands ###########################################################{{{1
+
+cd "$BASE_PATH"
 
 case "$1" in
  start)
@@ -207,7 +213,7 @@ case "$1" in
   cd "$WORLD_PATH"
   for world in $WORLD_PATH/*; do
    world="`basename "$world"`"
-   tar -cf "$DIR/$world.tar.xz" -I "$(dirname "$0")/compressor" "$world"
+   tar -cf "$DIR/$world.tar.xz" -I "$SCRIPT_DIR/compressor" "$world"
   done
   cd "$CURDIR"
   tmux send-keys -t "$SESSION_NAME" 'save-on' C-m &>/dev/null

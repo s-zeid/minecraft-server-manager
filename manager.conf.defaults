@@ -12,6 +12,8 @@
 # The variable names should be self-explanatory (except for the "Advanced
 # tmux options" section).
 # 
+# Path names are interpreted relative to $BASE_PATH.
+# 
 # NOTE: This defaults file uses a special syntax to set variables:
 # 
 #     _ ${VARIABLE_NAME:=default-value}
@@ -26,12 +28,12 @@ function _() { :; } # Vim < 7.4 syntax highlighting treats : as a comment line
 # General options #
 
 _ ${FRIENDLY_NAME:=The Minecraft server}
-_ ${BASE_PATH:=$(dirname "$0")/..}
-_ ${JAR_PATH:=$BASE_PATH/minecraft-server.jar}
-_ ${PID_FILE:=$BASE_PATH/server.pid}
-_ ${WORLD_PATH:=$BASE_PATH/worlds}
-_ ${PLUGIN_PATH:=$BASE_PATH/plugins}
-_ ${BACKUP_PATH:=$BASE_PATH/backups}
+_ ${BASE_PATH:=$(cd "$SCRIPT_DIR/.." && pwd)}
+_ ${JAR_PATH:=minecraft-server.jar}
+_ ${PID_FILE:=server.pid}
+_ ${WORLD_PATH:=worlds}
+_ ${PLUGIN_PATH:=plugins}
+_ ${BACKUP_PATH:=backups}
 
 # Java options #
 _ ${MIN_MEMORY:=16M}

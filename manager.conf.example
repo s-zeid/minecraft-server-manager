@@ -3,7 +3,6 @@
 FRIENDLY_NAME=Spigot
 TMUX_NAME=spigot
 
-BASE_PATH=/path/to/minecraft-server
-JAR_PATH=$BASE_PATH/spigot.jar
+JAR_PATH=spigot.jar
 
 MAX_MEMORY=2048M

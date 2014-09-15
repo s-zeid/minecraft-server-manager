@@ -77,6 +77,10 @@ This is possible because the defaults file is sourced *after* the user
 settings file, and the defaults file only sets variables if they are
 already set.  (See the comments in the defaults file for details.)
 
+Path variables (e.g. `$JAR_PATH` and `$WORLD_PATH`) will be interpreted
+relative to `$BASE_PATH`, so the above example is really unnecessary,
+even if you change `$BASE_PATH`.
+
 To use a different name/path for the user config file, use the -c/--config
 argument (must be the first argument).
 
