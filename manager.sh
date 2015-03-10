@@ -30,6 +30,7 @@
 
 SCRIPT=$0
 SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+SCRIPT_PID=$$
 
 # Configuration file parsing #########################################{{{1
 
@@ -94,6 +95,13 @@ STATUS_LEFT=${STATUS_LEFT% server}
 
 # Helper functions ###################################################{{{1
 
+function echo_error() {
+ echo "$SCRIPT: error: $@"
+}
+function echo_warning() {
+ echo "$SCRIPT: warning: $@"
+}
+
 function tmux() {
  env tmux -L "$SOCKET_NAME" "$@"
 }
@@ -121,12 +129,38 @@ function setup-tmux() {
  tmux-option -w window-status-separator ' '
 }
 
-SCRIPT=$0
-function echo_error() {
- echo "$SCRIPT: error: $@"
+function manager() {
+ "$SCRIPT" "$@"
 }
-function echo_warning() {
- echo "$SCRIPT: warning: $@"
+
+function is_running() {
+ if [ -f "$PID_FILE" ]; then
+  if [ -n "`ps -p $(cat "$PID_FILE" 2>/dev/null) -o args= | grep -F "$JAR_PATH"`" ]; then
+   # is running
+   return 0
+  else
+   # the PID file does not exist
+   return 2
+  fi
+ else
+  # not running
+  return 1
+ fi
+ # unknown error
+ return 127
+}
+
+function watch_loop() {
+ while true; do
+  if is_running; then
+   (tmux wait-for "$RANDOM$$$TMUX_NAME$RANDOM$SCRIPT_PID")
+  else
+   if [ $# -gt 0 ]; then
+    "$@"
+   fi
+   break
+  fi
+ done
 }
 
 # Commands ###########################################################{{{1
@@ -134,8 +168,25 @@ function echo_warning() {
 cd "$BASE_PATH"
 
 case "$1" in
+ foreground)
+  is_running; R=$?
+  if [ $R -eq 1 ]; then
+   manager start; X=$?
+   if [ $X -ne 0 ]; then
+    echo_error "could not start $FRIENDLY_NAME"
+    exit $X
+   fi
+  fi
+  is_running; R=$?
+  if [ $R -eq 0 ]; then
+   trap 'manager stop; exit' INT TERM QUIT
+   watch_loop
+  fi
+  
+  ;;
  start)
-  if [ -z "`pgrep -f -n "$JAR_PATH"`" ]; then
+  is_running; R=$?
+  if [ $R -eq 1 ]; then
    BASE_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$BASE_PATH"`"
    JAR_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$JAR_PATH"`"
    JAVA_OPTS_ESC=""
@@ -167,7 +218,7 @@ case "$1" in
  stop)
   tmux send-keys -t "$SESSION_NAME" 'stop' C-m
   while true; do
-   ps -p `cat "$PID_FILE"` &> /dev/null
+   ps -p `cat "$PID_FILE" 2>/dev/null` &> /dev/null
    if [ $? -ne 0 ]; then
     break
    fi
@@ -179,23 +230,23 @@ case "$1" in
   ;;
  
  status)
-  if [ -f "$PID_FILE" ]; then
-   if [ -n "`ps -p $(cat "$PID_FILE") -o args=|grep "$JAR_PATH"`" ];then
-    echo "$FRIENDLY_NAME is running (PID $(cat "$PID_FILE"))."
-   else
-    echo_error "the PID file does not exist"
-    exit 2
-   fi
-  else
+  is_running; R=$?
+  if [ $R -eq 0 ]; then
+   echo "$FRIENDLY_NAME is running (PID $(cat "$PID_FILE"))."
+  elif [ $R -eq 1 ]; then
    echo "$FRIENDLY_NAME is not running."
-   exit 1
+  elif [ $R -eq 2 ]; then
+   echo_error "the PID file does not exist"
+  else
+   echo_error "unknown error while determining server status"
   fi
+  exit $R
   ;;
   
  restart)
-  "$0" stop
+  manager stop
   sleep 0.1
-  "$0" start
+  manager start
   ;;
  
  backup)
@@ -209,9 +260,10 @@ case "$1" in
   tmux send-keys -t "$SESSION_NAME" 'save-all' C-m &>/dev/null
   DIR="$BACKUP_PATH/worlds/`date +%Y-%m-%dT%H-%M-%S`"
   mkdir -p "$DIR"
+  DIR=`cd "$DIR"; pwd`
   CURDIR="$PWD"
   cd "$WORLD_PATH"
-  for world in $WORLD_PATH/*; do
+  for world in ./*; do
    world="`basename "$world"`"
    tar -cf "$DIR/$world.tar.xz" -I "$SCRIPT_DIR/compressor" "$world"
   done
@@ -223,8 +275,9 @@ case "$1" in
   tmux send-keys -t "$SESSION_NAME" 'save-off' C-m &>/dev/null
   tmux send-keys -t "$SESSION_NAME" 'save-all' C-m &>/dev/null
   DIR="$BACKUP_PATH/plugins"
-  FILE="$DIR/plugins_`date +%Y-%m-%dT%H-%H-%S`.tar.xz"
   mkdir -p "$DIR"
+  DIR=`cd "$DIR"; pwd`
+  FILE="$DIR/plugins_`date +%Y-%m-%dT%H-%H-%S`.tar.xz"
   CURDIR="$PWD"
   cd "$(dirname "$PLUGIN_PATH")"
   tar -cJf "$FILE" "$(basename "$PLUGIN_PATH")"
@@ -235,8 +288,9 @@ case "$1" in
  backup-log)
   LOG="$BASE_PATH/server.log"
   DIR="$BACKUP_PATH/logs"
-  FILE="$DIR/server_`date +%Y-%m-%dT%H-%H-%S`.log"
   mkdir -p "$DIR"
+  DIR=`cd "$DIR"; pwd`
+  FILE="$DIR/server_`date +%Y-%m-%dT%H-%H-%S`.log"
   cp "$LOG" "$FILE" && xz "$FILE"
   if [ $? -eq 0 ]; then
    cp /dev/null "$LOG"
