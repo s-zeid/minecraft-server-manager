@@ -1,4 +1,4 @@
-Copyright (c) Scott Zeid.  <http://s.zeid.me/>
+Copyright (c) Scott Zeid.  <https://s.zeid.me/>
 
 ```
 Permission is hereby granted, free of charge, to any person obtaining a copy
