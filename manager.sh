@@ -135,7 +135,7 @@ function manager() {
 
 function is_running() {
  if [ -f "$PID_FILE" ]; then
-  if [ -n "`ps -p $(cat "$PID_FILE" 2>/dev/null) -o args= | grep -F "$JAR_PATH"`" ]; then
+  if (ps -p $(cat "$PID_FILE" 2>/dev/null) -o args= | grep -q -F "$JAR_PATH"); then
    # is running
    return 0
   else
@@ -170,7 +170,7 @@ cd "$BASE_PATH"
 case "$1" in
  foreground)
   is_running; R=$?
-  if [ $R -eq 1 ]; then
+  if [ $R -ne 0 ]; then
    manager start; X=$?
    if [ $X -ne 0 ]; then
     echo_error "could not start $FRIENDLY_NAME"
@@ -186,7 +186,7 @@ case "$1" in
   ;;
  start)
   is_running; R=$?
-  if [ $R -eq 1 ]; then
+  if [ $R -ne 0 ]; then
    BASE_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$BASE_PATH"`"
    JAR_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$JAR_PATH"`"
    JAVA_OPTS_ESC=""
