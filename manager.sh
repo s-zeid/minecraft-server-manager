@@ -120,8 +120,8 @@ function setup-tmux() {
  tmux-option status-bg "$STATUS_BG"
  tmux-option status-fg "$STATUS_FG"
  tmux-option status-position "$STATUS_POSITION"
- tmux-option status-left "$STATUS_LEFT"
- tmux-option status-left-length 11
+ tmux-option status-left "$STATUS_LEFT "
+ tmux-option status-left-length 12
  tmux-option status-right "$STATUS_RIGHT"
  tmux-option status-right-length 37
  tmux-option -w window-status-current-format 'on #H'
