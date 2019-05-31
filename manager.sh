@@ -3,7 +3,7 @@
 
 # Minecraft server management script
 # 
-# Copyright (c) 2013-2016 Scott Zeid.  Released under the X11 License.  
+# Copyright (c) 2013-2019 S. Zeid.  Released under the X11 License.  
 # <https://code.s.zeid.me/minecraft-server-manager>
 # 
 # Permission is hereby granted, free of charge, to any person obtaining a copy

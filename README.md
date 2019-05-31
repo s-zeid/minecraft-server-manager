@@ -1,7 +1,7 @@
 Minecraft server management script and systemd unit file
 ========================================================
 
-Copyright (c) 2013–2016 Scott Zeid.  Released under the X11 License.  
+Copyright (c) 2013–2019 S. Zeid.  Released under the X11 License.  
 <https://code.s.zeid.me/minecraft-server-manager>
 
 This is a shell script that can be used to start, stop, and control a
@@ -94,7 +94,7 @@ This code is [free software](https://gnu.org/philosophy/free-sw.html) licensed
 under the terms of the [X11 License](https://tldrlegal.com/license/x11-license):
 
 ```
-Copyright (c) Scott Zeid.  <https://s.zeid.me/>
+Copyright (c) S. Zeid.  <https://s.zeid.me/>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
