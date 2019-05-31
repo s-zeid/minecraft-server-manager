@@ -15,7 +15,7 @@ use tmux; however, the script should not conflict with other tmux instances.
 The script is intended to be contained within its own directory and not
 placed on your $PATH.  For a higher-level script that can be placed on
 your $PATH (and is also compatible with some other Minecraft server
-scripts), see <https://code.s.zeid.me/bin/cb>.
+scripts), see <https://code.s.zeid.me/bin/blob/master/cb>.
 
 The script is also not designed to be used as a SysV or LSB init script.
 
