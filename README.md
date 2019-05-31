@@ -5,7 +5,7 @@ Copyright (c) 2013–2019 S. Zeid.  Released under the X11 License.
 <https://code.s.zeid.me/minecraft-server-manager>
 
 This is a shell script that can be used to start, stop, and control a
-Minecraft server (including mods like Bukkit and Sponge), and a systemd
+Minecraft server (including mods like Spigot and Sponge), and a systemd
 unit file to go along with it.  Neither the unit file nor systemd itself
 are required to use the script.
 
@@ -28,8 +28,8 @@ Requirements
 Installation
 ------------
 
-    fedora$ sudo yum install bash tmux git
-    ubuntu$ sudo apt-get install bash tmux git
+    fedora$ sudo dnf install bash tmux git
+    ubuntu$ sudo apt install bash tmux git
     $ cd /path/to/minecraft-server
     $ git clone https://gitlab.com/scottywz/minecraft-server-manager.git manager
 
@@ -55,6 +55,7 @@ The few defaults particularly worth noting are:
   in which the script is contained.
 * `$TMUX_NAME`, which defaults to `minecraft-server` and needs to be
   changed if you will be running multiple servers.
+* `$JAVA_PATH`, which defaults to `java`.
 * `$JAR_PATH`, which defaults to `$BASE_PATH/minecraft-server.jar`.
 * `$MAX_MEMORY`, which defaults to `1024M`.
 * `$FRIENDLY_NAME`, which defaults to `The Minecraft server` and is
