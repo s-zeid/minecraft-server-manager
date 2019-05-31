@@ -304,7 +304,7 @@ case "$1" in
  cmd)
   shift
   CMD=$@
-  tmux send-keys -t "$SESSION_NAME" "$CMD" C-m
+  tmux send-keys -t "$SESSION_NAME" C-u "$CMD" C-m
   ;;
  
  console)
