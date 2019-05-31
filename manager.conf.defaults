@@ -29,6 +29,7 @@ function _() { :; } # Vim < 7.4 syntax highlighting treats : as a comment line
 
 _ ${FRIENDLY_NAME:=The Minecraft server}
 _ ${BASE_PATH:=$(cd "$SCRIPT_DIR/.." && pwd)}
+_ ${JAVA_PATH:=java}
 _ ${JAR_PATH:=minecraft-server.jar}
 _ ${PID_FILE:=server.pid}
 _ ${WORLD_PATH:=worlds}

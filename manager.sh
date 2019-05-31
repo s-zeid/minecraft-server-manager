@@ -77,6 +77,16 @@ function extra_window() {
 # Load default settings
 . "$SCRIPT_DIR"/manager.conf.defaults
 
+# Convert JAVA_PATH to absolute path
+if ! (printf '%s\n' "$JAVA_PATH" | grep -q -e '/'); then
+ JAVA_PATH=$(which "$JAVA_PATH")
+fi
+abspath() {
+ printf '%s\n' \
+  "$(cd "$(dirname -- "$1")"; printf '%s' "$(pwd)")/$(basename -- "$1")"
+}
+JAVA_PATH=$(abspath "$JAVA_PATH")
+
 # Append user Java options to $JAVA_OPTS
 # so that the defaults come first
 for (( i = 0; i < ${#JAVA_OPTS_USER[@]}; i++ )); do
@@ -188,13 +198,14 @@ case "$1" in
   is_running; R=$?
   if [ $R -ne 0 ]; then
    BASE_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$BASE_PATH"`"
+   JAVA_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$JAVA_PATH"`"
    JAR_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$JAR_PATH"`"
    JAVA_OPTS_ESC=""
    for (( i = 0; i < ${#JAVA_OPTS[@]}; i++)); do
     JAVA_OPTS_ESC+="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "${JAVA_OPTS[i]}"` "
    done
    rm -f "$PID_FILE"
-   tmux new-session -d -s "$SESSION_NAME" -n "$WINDOW_NAME" -d "cd $BASE_PATH_ESC; exec java -Xms$MIN_MEMORY -Xmx$MAX_MEMORY $JAVA_OPTS_ESC -jar $JAR_PATH_ESC nogui"
+   tmux new-session -d -s "$SESSION_NAME" -n "$WINDOW_NAME" -d "cd $BASE_PATH_ESC; exec $JAVA_PATH_ESC -Xms$MIN_MEMORY -Xmx$MAX_MEMORY $JAVA_OPTS_ESC -jar $JAR_PATH_ESC nogui"
    if [ $? -gt 0 ]; then
     exit 1
    fi
@@ -331,6 +342,7 @@ case "$1" in
 
   FRIENDLY_NAME:  $FRIENDLY_NAME
       BASE_PATH:  $BASE_PATH
+      JAVA_PATH:  $JAVA_PATH
        JAR_PATH:  $JAR_PATH
        PID_FILE:  $PID_FILE
      WORLD_PATH:  $WORLD_PATH

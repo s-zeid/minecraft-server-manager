@@ -3,6 +3,7 @@
 FRIENDLY_NAME=Spigot
 TMUX_NAME=spigot
 
+JAVA_PATH=/path/to/graalvm/bin/java
 JAR_PATH=spigot.jar
 
 MAX_MEMORY=2048M
