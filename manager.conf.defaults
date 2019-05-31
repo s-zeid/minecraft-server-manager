@@ -51,10 +51,10 @@ _ ${MAX_MEMORY:=1024M}
 # 
 # (Note:  do not use `default_java_opt`; that's for the default options.)
 
-default_java_opt -XX:+UseConcMarkSweepGC
-default_java_opt -XX:+CMSIncrementalPacing
+#default_java_opt -XX:+UseConcMarkSweepGC  # deprecated in Java 9
+#default_java_opt -XX:+CMSIncrementalPacing  # removed in Java 9
+#default_java_opt -XX:+AggressiveOpts  # deprecated in Java 11
 default_java_opt -XX:ParallelGCThreads=1
-default_java_opt -XX:+AggressiveOpts
 
 # tmux options #
 
