@@ -43,10 +43,10 @@ _ ${MAX_MEMORY:=1024M}
 
 # You can specify extra arguments to pass to the JVM in the following manner:
 # 
-#     java_opt "/path/to/some/script arg1 'arg2 with spaces' \"arg3 derp\""
-#     java_opt "/path/to/other/script"
+#     java_opt -XX:+UseG1GC
+#     java_opt -Dpolyglot.js.nashorn-compat=true
 # 
-# This adds 2 new elements with the new commands to the list of JVM options.
+# This adds 2 new elements with the new arguments to the list of JVM options.
 # 
 # Note that `-XX:+...`-style options can be disabled simply by using `-XX:-`
 # instead.
