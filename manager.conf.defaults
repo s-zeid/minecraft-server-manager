@@ -32,6 +32,7 @@ _ ${BASE_PATH:=$(cd "$SCRIPT_DIR/.." && pwd)}
 _ ${JAVA_PATH:=java}
 _ ${JAR_PATH:=minecraft-server.jar}
 _ ${PID_FILE:=server.pid}
+_ ${LOG_FILE:=logs/latest.log}
 _ ${WORLD_PATH:=worlds}
 _ ${PLUGIN_PATH:=plugins}
 _ ${BACKUP_PATH:=backups}

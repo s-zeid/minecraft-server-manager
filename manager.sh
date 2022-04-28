@@ -335,6 +335,23 @@ case "$1" in
   tmux send-keys -t "$SESSION_NAME" C-u "$CMD" C-m
   ;;
  
+ cmd-capture)
+  shift
+  CMD=$@
+  # $LOG_RE matches:
+  # - "[yyyy-MM-dd HH:MM:SS] [message type (if present)] "
+  # - "yyyy-MM-dd HH:MM:SS [message type (if present)] "
+  # - "[HH:MM:SS] [message type (if present)] "
+  # - "HH:MM:SS [message type (if present)] "
+  # - "[HH:MM:SS message type (if present)] "
+  LOG_PREFIX_RE="^(\[?([0-9]{4}-[0-9]{2}-[0-9]{2} )?[0-9]{2}:[0-9]{2}:[0-9]{2}\]?( \[?[^]]+\]?)?\]?:? )"
+  LOG_START=$((`wc -l "$LOG_FILE" | cut -d' ' -f1` + 1))  # output starts here
+  tmux send-keys -t "$SESSION_NAME" C-u "$CMD" C-m
+  sleep "0.25" >/dev/null 2>&1 || sleep 1  # float is in quotes to trick checkbashisms(1)
+  OUT="`tail -n +"$LOG_START" "$LOG_FILE" | sed -r -e "s/$LOG_PREFIX_RE//"`"  # read and remove prefix
+  printf '%s\n' "$OUT"
+  ;;
+ 
  console)
   tmux attach -t "$SESSION_NAME"
   ;;
@@ -362,6 +379,7 @@ case "$1" in
       JAVA_PATH:  $JAVA_PATH
        JAR_PATH:  $JAR_PATH
        PID_FILE:  $PID_FILE
+       LOG_FILE:  $LOG_FILE
      WORLD_PATH:  $WORLD_PATH
     PLUGIN_PATH:  $PLUGIN_PATH
     BACKUP_PATH:  $BACKUP_PATH
@@ -385,7 +403,9 @@ END
  *)
   echo "Usage: $0 \\"
   echo "        [-c config-file|--config=config-file] \\"
-  echo "        {start|stop|restart|status|backup{|-worlds|-plugins|-log}|cmd|console"
+  echo "        {start|stop|restart|status"
+  echo "         |backup{|-worlds|-plugins|-log}"
+  echo "         |cmd{|-capture}|console"
   echo "         |setup-tmux|tmux-option|tmux-options|dump-config}"
   exit 1
  
