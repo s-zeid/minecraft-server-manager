@@ -53,6 +53,7 @@ fi
 # copied to the end of the defaults one, and the defaults array
 # will then be re-used as the final value.
 declare -a JAVA_OPTS JAVA_OPTS_USER
+declare -a GAME_OPTS GAME_OPTS_USER
 declare -a EXTRA_WINDOWS EXTRA_WINDOWS_USER
 declare -a PATH_VARS PATH_VARS_USER
 
@@ -63,6 +64,12 @@ function default_java_opt() {
 }
 function java_opt() {
  JAVA_OPTS_USER[${#JAVA_OPTS_USER[@]}]="$1"
+}
+function default_game_opt() {
+ GAME_OPTS[${#GAME_OPTS[@]}]="$1"
+}
+function game_opt() {
+ GAME_OPTS_USER[${#GAME_OPTS_USER[@]}]="$1"
 }
 function default_extra_window() {
  EXTRA_WINDOWS[${#EXTRA_WINDOWS[@]}]="$1"
@@ -91,6 +98,11 @@ JAVA_PATH=$(abspath "$JAVA_PATH")
 # so that the defaults come first
 for (( i = 0; i < ${#JAVA_OPTS_USER[@]}; i++ )); do
  default_java_opt "${JAVA_OPTS_USER[i]}"
+done
+# Append user game options to $GAME_OPTS
+# so that the defaults come first
+for (( i = 0; i < ${#GAME_OPTS_USER[@]}; i++ )); do
+ default_game_opt "${GAME_OPTS_USER[i]}"
 done
 # Append user extra windows to $EXTRA_WINDOWS
 # so that the defaults come first
@@ -200,12 +212,17 @@ case "$1" in
    BASE_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$BASE_PATH"`"
    JAVA_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$JAVA_PATH"`"
    JAR_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$JAR_PATH"`"
+   WORLD_PATH_ESC="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "$WORLD_PATH"`"
    JAVA_OPTS_ESC=""
    for (( i = 0; i < ${#JAVA_OPTS[@]}; i++)); do
     JAVA_OPTS_ESC+="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "${JAVA_OPTS[i]}"` "
    done
+   GAME_OPTS_ESC=""
+   for (( i = 0; i < ${#GAME_OPTS[@]}; i++)); do
+    GAME_OPTS_ESC+="`sed -r "s/( \\\"'\\\$)/\\\\\\\\\1/g" <<< "${GAME_OPTS[i]}"` "
+   done
    rm -f "$PID_FILE"
-   tmux new-session -d -s "$SESSION_NAME" -n "$WINDOW_NAME" -d "cd $BASE_PATH_ESC; exec $JAVA_PATH_ESC -Xms$MIN_MEMORY -Xmx$MAX_MEMORY $JAVA_OPTS_ESC -jar $JAR_PATH_ESC nogui"
+   tmux new-session -d -s "$SESSION_NAME" -n "$WINDOW_NAME" -d "cd $BASE_PATH_ESC; exec $JAVA_PATH_ESC -Xms$MIN_MEMORY -Xmx$MAX_MEMORY $JAVA_OPTS_ESC -jar $JAR_PATH_ESC -W $WORLD_PATH_ESC $GAME_OPTS_ESC"
    if [ $? -gt 0 ]; then
     exit 1
    fi

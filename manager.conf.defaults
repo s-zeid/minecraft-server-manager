@@ -57,6 +57,15 @@ _ ${MAX_MEMORY:=1024M}
 #default_java_opt -XX:+AggressiveOpts  # deprecated in Java 11
 default_java_opt -XX:ParallelGCThreads=1
 
+# You can specify extra arguments to pass to the game in the following manner:
+# 
+#     game_opt --option-1
+#     game_opt --option-2
+# 
+# (Note:  do not use `default_game_opt`; that's for the default options.)
+
+default_game_opt nogui
+
 # tmux options #
 
 # These options control the appearance of the tmux instance in which the

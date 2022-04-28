@@ -3,7 +3,12 @@
 FRIENDLY_NAME=Spigot
 TMUX_NAME=spigot
 
-JAVA_PATH=/path/to/graalvm/bin/java
+JAVA_PATH=/path/to/bin/java
 JAR_PATH=spigot.jar
 
 MAX_MEMORY=2048M
+
+# Uncomment to upgrade worlds
+# (including Multiverse worlds if their `autoLoad` key is true in `worlds.yml`)
+#game_opt --forceUpgrade
+#game_opt --eraseCache
