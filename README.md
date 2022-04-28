@@ -1,7 +1,7 @@
 Minecraft server management script and systemd unit file
 ========================================================
 
-Copyright (c) 2013–2019 S. Zeid.  Released under the X11 License.  
+Copyright (c) 2013–2022 S. Zeid.  Released under the X11 License.  
 <https://code.s.zeid.me/minecraft-server-manager>
 
 This is a shell script that can be used to start, stop, and control a
@@ -15,7 +15,7 @@ use tmux; however, the script should not conflict with other tmux instances.
 The script is intended to be contained within its own directory and not
 placed on your $PATH.  For a higher-level script that can be placed on
 your $PATH (and is also compatible with some other Minecraft server
-scripts), see <https://code.s.zeid.me/bin/blob/master/cb>.
+scripts), see <https://code.s.zeid.me/bin/blob/main/cb>.
 
 The script is also not designed to be used as a SysV or LSB init script.
 
@@ -31,7 +31,7 @@ Installation
     fedora$ sudo dnf install bash tmux git
     ubuntu$ sudo apt install bash tmux git
     $ cd /path/to/minecraft-server
-    $ git clone https://gitlab.com/scottywz/minecraft-server-manager.git manager
+    $ git clone https://gitlab.com/s-zeid/minecraft-server-manager.git manager
 
 To update the manager:
 
