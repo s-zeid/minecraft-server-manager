@@ -226,7 +226,7 @@ case "$1" in
    if [ $? -gt 0 ]; then
     exit 1
    fi
-   sleep 1
+   sleep $SLEEP_AFTER_START_SECONDS
    setup-tmux
    tmux list-panes -s -t "$SESSION_NAME" -F '#{pane_pid}' | tee "$PID_FILE" > /dev/null
    for ((i = 0; i < ${#EXTRA_WINDOWS[@]}; i++)); do

@@ -116,3 +116,7 @@ _ ${WINDOW_NAME:=$TMUX_NAME}
 # 
 # (Note:  do not use `default_extra_windows`; that's for the default extra
 # windows, of which there are none.)
+
+# Internal options #
+
+_ ${SLEEP_AFTER_START_SECONDS:=1}
