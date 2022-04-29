@@ -157,7 +157,10 @@ function manager() {
 
 function is_running() {
  if [ -f "$PID_FILE" ]; then
-  if (ps -p $(cat "$PID_FILE" 2>/dev/null) -o args= | grep -q -F "$JAR_PATH"); then
+  if ! grep -q -e '^[0-9]\+$' "$PID_FILE"; then
+   # the PID file is empty or malformed
+   return 3
+  elif (ps -p $(cat "$PID_FILE" 2>/dev/null) -o args= | grep -q -F "$JAR_PATH"); then
    # is running
    return 0
   else
@@ -227,8 +230,12 @@ case "$1" in
     exit 1
    fi
    sleep $SLEEP_AFTER_START_SECONDS
+   tmux list-panes -s -t "$SESSION_NAME" -F '#{pane_pid}' > "$PID_FILE"
+   if [ $? -ne 0 ]; then
+    echo "error: the server failed to start" >&2
+    exit 1
+   fi
    setup-tmux
-   tmux list-panes -s -t "$SESSION_NAME" -F '#{pane_pid}' | tee "$PID_FILE" > /dev/null
    for ((i = 0; i < ${#EXTRA_WINDOWS[@]}; i++)); do
     tmux new-window -d -c "$BASE_PATH" "${EXTRA_WINDOWS[i]}"
     r=$?
